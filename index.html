@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173c35">
+  <title>البردجي | إدارة الفروع</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="local-store.js"></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div id="app">
+    <section id="workspace" class="workspace">
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <div class="brand-mark small"><img src="assets/bardaji-logo.png" alt="شعار البردجي"></div>
+          <div><strong>البردجي</strong><small>AL-BARDAJI</small></div>
+          <button id="sidebar-toggle" class="icon-button mobile-only" aria-label="فتح القائمة">☰</button>
+        </div>
+        <div class="branch-picker">
+          <span class="picker-label">الفرع النشط</span>
+          <select id="branch-select" aria-label="اختر الفرع"></select>
+        </div>
+        <nav id="main-nav" aria-label="القائمة الرئيسية">
+          <button class="nav-link active" data-page="dashboard"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg></span><span class="nav-text">لوحة التحكم</span></button>
+          <p class="nav-label">إدارة العمل</p>
+          <button class="nav-link" data-page="orders"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v5h4M10 12h6M10 16h6"/></svg></span><span class="nav-text">الطلبات</span><i id="orders-count"></i></button>
+          <button class="nav-link" data-page="customers"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M3 20v-1a6 6 0 0 1 12 0v1zM16 5.2a3.5 3.5 0 0 1 0 6.6M18 14a5 5 0 0 1 3 4.6V20"/></svg></span><span class="nav-text">الزبائن</span></button>
+          <button class="nav-link" data-page="payments"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span><span class="nav-text">الدفعات</span></button>
+          <button class="nav-link" data-page="expenses"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18 18 4M8 4h10v10"/><path d="M4 20h16"/></svg></span><span class="nav-text">المصاريف</span></button>
+          <p class="nav-label">المتابعة</p>
+          <button class="nav-link" data-page="inventory"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5"/></svg></span><span class="nav-text">المخزون</span></button>
+          <button class="nav-link" data-page="reports"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><span class="nav-text">التقارير</span></button>
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="connection-indicator"><span></span> التخزين المحلي على هذا الجهاز</div>
+        </div>
+      </aside>
+
+      <main class="main-area">
+        <header class="topbar">
+          <div>
+            <p id="breadcrumb" class="eyebrow">نظرة عامة</p>
+            <h1 id="page-title">لوحة التحكم</h1>
+          </div>
+          <div class="topbar-actions">
+            <div class="today-chip"><span class="clock-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span id="today-label"></span></div>
+            <div class="user-chip"><span class="avatar" id="user-avatar">م</span><span><strong id="user-name">الموظف</strong><small id="user-role"></small></span></div>
+          </div>
+        </header>
+        <div class="mobile-branch-picker">
+          <label for="mobile-branch-select">الفرع النشط</label>
+          <select id="mobile-branch-select" aria-label="اختر الفرع"></select>
+        </div>
+        <div id="page-content" aria-live="polite"></div>
+      </main>
+    </section>
+    <div id="toast-region" class="toast-region" aria-live="assertive"></div>
+    <dialog id="record-dialog" class="record-dialog">
+      <form id="record-form" method="dialog">
+        <div class="dialog-heading"><div><p class="eyebrow" id="dialog-kicker">إضافة سجل</p><h2 id="dialog-title"></h2></div><button type="button" class="icon-button" id="dialog-close" aria-label="إغلاق">×</button></div>
+        <div id="dialog-fields" class="form-grid"></div>
+        <div class="dialog-actions"><button type="button" class="button button-quiet" id="dialog-cancel">إلغاء</button><button class="button button-primary" id="dialog-save" type="submit">حفظ السجل</button></div>
+      </form>
+    </dialog>
+    <dialog id="statistics-dialog" class="statistics-dialog">
+      <div class="statistics-content">
+        <div class="dialog-heading"><div><p class="eyebrow" id="statistics-kicker">إحصائيات الفرع</p><h2 id="statistics-title"></h2></div><button type="button" class="icon-button" id="statistics-close" aria-label="إغلاق">×</button></div>
+        <div id="statistics-body"></div>
+      </div>
+    </dialog>
+    <dialog id="cancel-dialog" class="record-dialog">
+      <form id="cancel-form">
+        <div class="dialog-heading"><div><p class="eyebrow">إلغاء مالي مسجل</p><h2>سبب إلغاء الدفعة</h2></div><button type="button" class="icon-button" id="cancel-close" aria-label="إغلاق">×</button></div>
+        <label>سبب الإلغاء
+          <input name="reason" type="text" minlength="3" required>
+        </label>
+        <div class="dialog-actions"><button type="button" class="button button-quiet" id="cancel-dismiss">رجوع</button><button class="button button-primary" type="submit">تأكيد الإلغاء</button></div>
+      </form>
+    </dialog>
+  </div>
+</body>
+</html>
